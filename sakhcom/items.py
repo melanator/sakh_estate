@@ -34,14 +34,14 @@ def floor(arr):
 
 
 def added(text):
-    #["Добавлено 28.09, обновлено ", "Объявление просматривали 242 раза, 
+    #["Добавлено 28.09, обновлено ", "Объявление просматривали 242 раза,
     # интересовались контактами 12 раз."]
     return text.split()[1][:-1]
 
 
 def convert_date(date):
     # convert string March 14, 1879 to Python date
-    return datetime.strptime(date+' 2021', '%d.%m %Y')
+    return datetime.strptime(date + ' 2021', '%d.%m %Y')
 
 
 def url_photos(text):
