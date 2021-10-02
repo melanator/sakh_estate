@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 from itemloaders.processors import MapCompose, TakeFirst, Join
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def get_id(text):
@@ -41,12 +41,38 @@ def added(text):
 
 def convert_date(date):
     # convert string March 14, 1879 to Python date
-    return datetime.strptime(date + ' 2021', '%d.%m %Y')
+    if not any(char.isdigit() for char in date):
+        return date
+    if len(date.split('.')) == 2:
+        date += '.2021'
+    return datetime.strptime(date, '%d.%m.%Y')
 
 
 def url_photos(text):
     url = text[44:-9]
     return url.replace("/s/", "/l/")
+
+
+def to_int(text):
+    return int(text)
+
+
+def updated(text):
+    if text == 'сегодня':
+        return datetime.today()
+    elif text == 'вчера':
+        return datetime.today() - timedelta(days=1)
+    try:
+        # If data can be transfomed to datetime object
+        return datetime.strptime(text, '%d.%m.%Y')
+    except ValueError:
+        num, text = text.split(' ', 1)
+        if 'дн' in text:
+            return datetime.today() - timedelta(days=int(num))
+        if 'нед' in text:
+            return datetime.today() - timedelta(weeks=int(num))
+        if 'мес' in text:
+            return datetime.today() - timedelta(days=int(num)*30)
 
 
 class SakhcomItem(Item):
@@ -55,7 +81,7 @@ class SakhcomItem(Item):
     ad_id = Field(
         output_processor=TakeFirst())
     price = Field(
-        input_processor=MapCompose(remove_spaces),
+        input_processor=MapCompose(remove_spaces, to_int),
         output_processor=TakeFirst())
     area = Field(
         input_processor=MapCompose(area),
@@ -70,12 +96,12 @@ class SakhcomItem(Item):
         output_processor=Join())
     params = Field()
     added = Field(
-        input_processor=MapCompose(added),
+        input_processor=MapCompose(added, convert_date),
         output_processor=TakeFirst())
     updated = Field(
+        input_processor=MapCompose(updated),
         output_processor=TakeFirst())
     photo_inside = Field(
         input_processor=MapCompose(url_photos))
     photo_outside = Field()
     url = Field()
-    pass

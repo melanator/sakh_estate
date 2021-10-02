@@ -5,7 +5,7 @@
 
 
 # useful for handling different item types with a single interface
-import json
+import json_handler
 from scrapy.exporters import JsonItemExporter
 from itemadapter import ItemAdapter
 

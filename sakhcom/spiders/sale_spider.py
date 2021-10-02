@@ -44,9 +44,9 @@ class SaleSpider(scrapy.Spider):
             self.logger.info(f'Last page reached. Stop spides.')
 
     def parse_ad(self, response):
-        '''
+        """
         Get item from ad page.
-        '''
+        """
         loader = ItemLoader(item=SakhcomItem(), selector=response)
         loader.add_value('ad_id', response.meta['ad_id'])
         loader.add_xpath('price', './/span[@class="value"]/text()')
