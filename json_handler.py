@@ -28,22 +28,30 @@ if __name__ == '__main__':
               'Стороны света': 'side'}
 
     for row in data:
-        row['floor'] = int(row['floor'])
-        row['area'] = int(row['area'])
-        row['city'] = row['address'].split()[0][:-1]
-        row['address'] = ' '.join(row['address'].split()[1:])
-
         try:
-            for x in row['params']:
-                try:
-                    k, v = x.split(':', 1)
-                    row[params[k]] = v[1:]
-                except ValueError:
-                    row['mortgage'] = 'yes'
-            del row['params']
+            row['floor'] = int(row['floor'])
+        except KeyError:
+            pass
+        try:
+            row['area'] = int(row['area'])
+        except KeyError:
+            pass
+        try:
+            row['city'] = row['address'].split()[0][:-1]
+            row['address'] = ' '.join(row['address'].split()[1:])
         except KeyError:
             pass
 
+        try:
+            for x in row['params']:
+                if x == 'Подходит под ипотеку':
+                    row['mortgage'] = 'yes'
+                else:
+                    k, v = x.split(':', 1)
+                    row[params[k]] = v[1:]
+            del row['params']
+        except KeyError:
+            pass
 
         try:
             del row['photo_inside']

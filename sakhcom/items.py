@@ -34,6 +34,10 @@ def floor(arr):
 
 
 def added(text):
+    if text == 'сегодня':
+        return datetime.today()
+    elif text == 'вчера':
+        return datetime.today() - timedelta(days=1)
     #["Добавлено 28.09, обновлено ", "Объявление просматривали 242 раза,
     # интересовались контактами 12 раз."]
     return text.split()[1][:-1]

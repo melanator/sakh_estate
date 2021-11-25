@@ -6,7 +6,7 @@ from sakhcom.items import SakhcomItem
 class SaleSpider(scrapy.Spider):
     name = 'sale'
 
-    # URL for navigating throught website
+    # URL for navigating throughout website
     start_url = 'https://dom.sakh.com/flat/sell/list1/'
     ad_url = 'https://dom.sakh.com/flat/sell/'
 
