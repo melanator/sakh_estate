@@ -1,7 +1,7 @@
 import scrapy
 from scrapy.loader import ItemLoader
 from sakhcom.items import SakhcomItem
-
+from datetime import datetime
 
 class SaleSpider(scrapy.Spider):
     name = 'sale'
@@ -21,7 +21,7 @@ class SaleSpider(scrapy.Spider):
         # Retrive on which page we are on this iteration
         ads_count = int(response.xpath(
             '//div[@class="pages"]/div[@class="title"]/b/text()').get())
-        pages = (ads_count // 20) + 1
+        pages = (ads_count // 400) + 1 #Must be 20
         current_page = int(response.xpath(
             '//div[@class="pages"]//div[@class="item selected"]/text()').get())
         next_page_url = self.next_page_url + \
@@ -63,5 +63,6 @@ class SaleSpider(scrapy.Spider):
             'photo_inside', './/div[@class="photos clearfix"]//div[@class="preview"]')
         loader.add_xpath(
             'photo_outside', './/div[@class="photos clearfix"][2]//img/@src')
+        loader.add_value('scraped', datetime.today().date())
 
         yield loader.load_item()
