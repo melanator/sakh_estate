@@ -21,7 +21,7 @@ class SaleSpider(scrapy.Spider):
         # Retrive on which page we are on this iteration
         ads_count = int(response.xpath(
             '//div[@class="pages"]/div[@class="title"]/b/text()').get())
-        pages = (ads_count // 400) + 1 #Must be 20
+        pages = (ads_count // 20) + 1 #Must be 20
         current_page = int(response.xpath(
             '//div[@class="pages"]//div[@class="item selected"]/text()').get())
         next_page_url = self.next_page_url + \
